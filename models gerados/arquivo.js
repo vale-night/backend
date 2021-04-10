@@ -8,6 +8,7 @@ module.exports = function(sequelize, DataTypes) {
     },
     dataUpload: {
       type: DataTypes.DATEONLY,
+      allowNull: true
     },
     caminhoArquivo: {
       type: DataTypes.STRING(45),

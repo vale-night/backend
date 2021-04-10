@@ -40,7 +40,7 @@ EventType.init({
       }
 }, {
     sequelize,
-    tableName: 'EventType',
+    tableName: 'eventType',
     timestamps: false,
     indexes: [
       {

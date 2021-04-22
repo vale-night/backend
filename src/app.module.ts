@@ -3,10 +3,10 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { ClientsModule } from './clients/clients.module';
-import { Client } from './clients/entities/client.entity';
+import { OrganizersModule } from './organizers/organizers.module';
 
 @Module({
-  imports: [
+  imports: [ //TODO - Configurar um esquema com variáveis de ambiente, pra facilitar configurações
     TypeOrmModule.forRoot({
       type: 'mysql',
       host: 'localhost',
@@ -17,7 +17,8 @@ import { Client } from './clients/entities/client.entity';
       autoLoadEntities: true,
       synchronize: true,
     }),
-    ClientsModule],
+    ClientsModule,
+    OrganizersModule],
   controllers: [AppController],
   providers: [AppService],
 })

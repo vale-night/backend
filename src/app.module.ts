@@ -5,9 +5,16 @@ import { AppService } from './app.service';
 import { ClientsModule } from './clients/clients.module';
 import { OrganizersModule } from './organizers/organizers.module';
 import { AuthModule } from './auth/auth.module';
+import { UsersModule } from './users/users.module';
+import { ConfigModule } from '@nestjs/config';
+import configuration from './configuration';
 
 @Module({
-  imports: [ //TODO - Configurar um esquema com variáveis de ambiente, pra facilitar configurações
+  imports: [ 
+    ConfigModule.forRoot({
+      isGlobal: true,
+      load: [configuration]
+    }),
     TypeOrmModule.forRoot({
       type: 'mysql',
       host: 'localhost',
@@ -20,7 +27,8 @@ import { AuthModule } from './auth/auth.module';
     }),
     ClientsModule,
     OrganizersModule,
-    AuthModule],
+    AuthModule,
+    UsersModule],
   controllers: [AppController],
   providers: [AppService],
 })

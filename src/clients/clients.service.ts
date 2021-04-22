@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { UsersService } from 'src/users/users.service';
 import { Repository } from 'typeorm';
 import { CreateClientDto } from './dto/create-client.dto';
 import { UpdateClientDto } from './dto/update-client.dto';
@@ -9,12 +10,18 @@ import { Client } from './entities/client.entity';
 export class ClientsService {
 
   constructor(
-    @InjectRepository(Client)
-      private clientRepository: Repository<Client>
+      @InjectRepository(Client)
+      private clientRepository: Repository<Client>,
+      private userService: UsersService
     ) {}
 
-  create(createClientDto: CreateClientDto) {
-    return this.clientRepository.save(createClientDto);
+  async create(createClientDto: CreateClientDto) {
+    const userParams = createClientDto.user;
+    createClientDto.user = null;
+    const savedClient = await this.clientRepository.save(createClientDto);
+    const user = await this.userService.createForClient(userParams, savedClient);
+    this.clientRepository.update({id: savedClient.id}, {user});
+    return savedClient;
 
   }
 
@@ -28,7 +35,7 @@ export class ClientsService {
   }
 
   findOneByEmail(email: string) {
-    return this.clientRepository.findOne({email: email})
+    return null;
   }
 
   update(id: string, updateClientDto: UpdateClientDto) {

@@ -1,16 +1,17 @@
 import { Injectable } from '@nestjs/common';
-import { ClientsService } from 'src/clients/clients.service';
+import * as bcrypt from 'bcrypt';
+import { UsersService } from 'src/users/users.service';
 
 @Injectable()
 export class AuthService {
-    constructor(private clientsService: ClientsService) {
+    constructor(private userService: UsersService) {
     }
 
     //TODO - Melhorar para trabalhar com duas entidades
     //TODO - Salvar senha em BCrypt
     async validateUser(username: string, pass: string): Promise<any> {
-        const user = await this.clientsService.findOneByEmail(username);
-        if (user && user.password === pass) {
+        const user = await this.userService.findOneByEmail(username);
+        if (user && bcrypt.compareSync(pass, user.password)) {
           const { password, ...result } = user;
           return result;
         }

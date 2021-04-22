@@ -1,4 +1,5 @@
-import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
+import { User } from "src/users/entities/user.entity";
+import { Column, Entity, JoinColumn, OneToOne, PrimaryGeneratedColumn } from "typeorm";
 
 @Entity({
     name:"organizer"
@@ -16,9 +17,7 @@ export class Organizer {
     @Column()
     socialReason: string;
 
-    @Column()
-    email: string;
-    
-    @Column()
-    password: string;
+    @OneToOne(type => User, user => user.organizer, {nullable: true})
+    @JoinColumn()
+    user: User;
 }

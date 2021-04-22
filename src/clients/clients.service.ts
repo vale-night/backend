@@ -27,6 +27,10 @@ export class ClientsService {
     return this.clientRepository.findOne(id);
   }
 
+  findOneByEmail(email: string) {
+    return this.clientRepository.findOne({email: email})
+  }
+
   update(id: string, updateClientDto: UpdateClientDto) {
     return `This action updates a #${id} client`;
   }

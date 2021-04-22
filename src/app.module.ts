@@ -7,6 +7,7 @@ import { OrganizersModule } from './organizers/organizers.module';
 import { AuthModule } from './auth/auth.module';
 import { UsersModule } from './users/users.module';
 import { ConfigModule } from '@nestjs/config';
+import { AddressesModule } from './addresses/addresses.module';
 import configuration from './configuration';
 
 @Module({
@@ -28,7 +29,8 @@ import configuration from './configuration';
     ClientsModule,
     OrganizersModule,
     AuthModule,
-    UsersModule],
+    UsersModule,
+    AddressesModule],
   controllers: [AppController],
   providers: [AppService],
 })

@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { CreateUserDto } from './dto/create-user.dto';
@@ -15,6 +15,7 @@ export class UsersService {
         private userRepository: Repository<User>
     ) { }
 
+    //TODO - Melhorar, utilizar hooks do próprio TypeORM, para criar a hash antes de persistir. Fazendo isto, estes métodos não serão necessários
     async createForClient(params: CreateUserDto, client: Client) {
         const userToSave = await this.prepareToCreate(params);
         userToSave.client = client;
@@ -36,5 +37,27 @@ export class UsersService {
 
     findOneByEmail(email: string) {
         return this.userRepository.findOne({email}, {relations: ['client', 'organizer']});
+    }
+
+    async findByLogin({ username, password }: {username, password}): Promise<User> {    
+        const user = await this.findOneByEmail(username);
+        
+        if (!user) {
+            throw new UnauthorizedException('Usuário não encontrado');    
+        }
+        
+        // compare passwords    
+        const areEqual = await this.comparePasswords(user.password, password);
+        
+        if (!areEqual) {
+            throw new UnauthorizedException('Credenciais inválidas');    
+        }
+        
+        user.password = null;
+        return user;  
+    }
+
+    private async comparePasswords(originalPassword, receivedPassword) {
+        return bcrypt.compareSync(receivedPassword, originalPassword);
     }
 }

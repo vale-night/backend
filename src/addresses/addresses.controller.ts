@@ -17,22 +17,30 @@ export class AddressesController {
   }
 
   @Get()
-  findAll() {
-    return this.addressesService.findAll();
+  @UseGuards(AuthGuard('jwt'))
+  findAll(@Req() req: any) {
+    const user = <User> req.user;
+    return this.addressesService.findAll(user);
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.addressesService.findOne(+id);
+  @UseGuards(AuthGuard('jwt'))
+  findOne(@Param('id') id: string, @Req() req: any) {
+    const user = <User> req.user;
+    return this.addressesService.findOne(id, user);
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateAddressDto: UpdateAddressDto) {
-    return this.addressesService.update(+id, updateAddressDto);
+  @UseGuards(AuthGuard('jwt'))
+  update(@Param('id') id: string, @Body() updateAddressDto: UpdateAddressDto, @Req() req: any) {
+    const user = <User> req.user;
+    return this.addressesService.update(id, updateAddressDto);
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.addressesService.remove(+id);
+  @UseGuards(AuthGuard('jwt'))
+  remove(@Param('id') id: string, @Req() req: any) {
+    const user = <User> req.user;
+    return this.addressesService.remove(id, user);
   }
 }

@@ -15,7 +15,6 @@ export class AddressesService {
   ) { }
 
   create(createAddressDto: CreateAddressDto, user: User) {
-    console.log(user);
     if(user.client) {
       createAddressDto.client = user.client;
     } else if (user.organizer) {
@@ -24,19 +23,36 @@ export class AddressesService {
     return this.addressRepository.save(createAddressDto);
   }
 
-  findAll() {
-    return `This action returns all addresses`;
+  findAll(user: User) {
+    let userParams = this.getFindUserParameters(user);
+    return this.addressRepository.find(userParams);
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} address`;
+  findOne(id: string, user: User) {
+    let userParams = this.getFindUserParameters(user);
+    return this.addressRepository.findOne({id, ...userParams})
   }
 
-  update(id: number, updateAddressDto: UpdateAddressDto) {
+  update(id: string, updateAddressDto: UpdateAddressDto) {
     return `This action updates a #${id} address`;
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} address`;
+  remove(id: string, user: User) {
+    let userParams = this.getFindUserParameters(user);
+    return this.addressRepository.delete({id, ...userParams});
+  }
+
+  private getFindUserParameters(user: User) {
+    let userParams = {};
+    if(user.client) {
+      userParams = {
+        client: user.client
+      }
+    } else if (user.organizer) {
+      userParams = {
+        organizer: user.organizer
+      }
+    }
+    return userParams;
   }
 }

@@ -2,6 +2,12 @@ import { Client } from "src/clients/entities/client.entity";
 import { Organizer } from "src/organizers/entities/organizer.entity";
 import { Column, CreateDateColumn, Entity, ManyToOne, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
 
+export enum AddressType {
+    COMMERCIAL = "COMMERCIAL",
+    RESIDENTIAL = "RESIDENTIAL"
+
+}
+
 @Entity({
     name: "address"
 })
@@ -32,6 +38,12 @@ export class Address {
 
     @Column()
     longitude: string;
+
+    @Column({
+        type: 'enum',
+        enum: AddressType
+    })
+    type: AddressType;
 
     @ManyToOne(type => Organizer)
     organizer: Organizer;

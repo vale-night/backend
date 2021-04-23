@@ -1,5 +1,6 @@
 import { Client } from "src/clients/entities/client.entity";
 import { Organizer } from "src/organizers/entities/organizer.entity";
+import { AddressType } from "../entities/address.entity";
 
 export class CreateAddressDto {
     street: string;
@@ -10,6 +11,7 @@ export class CreateAddressDto {
     complement: string;
     latitude: string;
     longitude: string;
+    type: AddressType;
     organizer: Organizer;
     client: Client;
 }

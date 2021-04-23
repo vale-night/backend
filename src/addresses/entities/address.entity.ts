@@ -1,6 +1,6 @@
 import { Client } from "src/clients/entities/client.entity";
 import { Organizer } from "src/organizers/entities/organizer.entity";
-import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
+import { Column, CreateDateColumn, Entity, ManyToOne, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
 
 @Entity({
     name: "address"
@@ -38,5 +38,11 @@ export class Address {
 
     @ManyToOne(type => Client)
     client: Client;
+
+    @CreateDateColumn()
+    created_at: Date;
+
+    @UpdateDateColumn()
+    updated_at: Date;
 
 }

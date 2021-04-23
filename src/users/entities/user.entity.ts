@@ -1,6 +1,6 @@
 import { Client } from "src/clients/entities/client.entity";
 import { Organizer } from "src/organizers/entities/organizer.entity";
-import { Column, Entity, JoinColumn, OneToOne, PrimaryGeneratedColumn } from "typeorm";
+import { Column, CreateDateColumn, Entity, JoinColumn, OneToOne, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
 
 @Entity({name: "user"})
 export class User {
@@ -21,5 +21,11 @@ export class User {
     @OneToOne(type => Organizer, organizer => organizer.user, {nullable: true})
     @JoinColumn()
     organizer: Organizer;
+
+    @CreateDateColumn()
+    created_at: Date;
+
+    @UpdateDateColumn()
+    updated_at: Date;
 
 }

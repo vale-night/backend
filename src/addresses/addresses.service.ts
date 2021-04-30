@@ -24,12 +24,12 @@ export class AddressesService {
   }
 
   findAll(user: User) {
-    let userParams = this.getFindUserParameters(user);
+    let userParams = user.findParameters;
     return this.addressRepository.find(userParams);
   }
 
   findOne(id: string, user: User) {
-    let userParams = this.getFindUserParameters(user);
+    let userParams = user.findParameters;
     return this.addressRepository.findOne({id, ...userParams})
   }
 
@@ -38,21 +38,7 @@ export class AddressesService {
   }
 
   remove(id: string, user: User) {
-    let userParams = this.getFindUserParameters(user);
+    let userParams = user.findParameters;
     return this.addressRepository.delete({id, ...userParams});
-  }
-
-  private getFindUserParameters(user: User) {
-    let userParams = {};
-    if(user.client) {
-      userParams = {
-        client: user.client
-      }
-    } else if (user.organizer) {
-      userParams = {
-        organizer: user.organizer
-      }
-    }
-    return userParams;
   }
 }

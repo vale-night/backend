@@ -6,4 +6,5 @@ export class CreateFileDto {
     filePath: string;
     organizer: Organizer;
     client: Client;
+    file: Express.Multer.File
 }

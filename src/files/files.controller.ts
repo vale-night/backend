@@ -1,9 +1,10 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards, Req } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards, Req, UseInterceptors, UploadedFile, UploadedFiles } from '@nestjs/common';
 import { FilesService } from './files.service';
 import { CreateFileDto } from './dto/create-file.dto';
 import { UpdateFileDto } from './dto/update-file.dto';
 import { AuthGuard } from '@nestjs/passport';
 import { User } from 'src/users/entities/user.entity';
+import { AnyFilesInterceptor } from '@nestjs/platform-express';
 
 @Controller('files')
 export class FilesController {
@@ -11,9 +12,17 @@ export class FilesController {
 
   @Post()
   @UseGuards(AuthGuard('jwt'))
-  create(@Body() createFileDto: CreateFileDto, @Req() req: any) {
+  @UseInterceptors(AnyFilesInterceptor())
+  create(@UploadedFiles() files: Array<Express.Multer.File>, @Body() body, @Req() req: any) {
+    const createFileDtos = [];
+    console.log(body);
+    for (const file of files) {
+      const createFileDto = new CreateFileDto();
+      createFileDto.file = file;
+      createFileDtos.push(createFileDto);
+    }
     const user = <User> req.user;
-    return this.filesService.create(createFileDto, user);
+    return this.filesService.create(createFileDtos, user);
   }
 
   @Get()

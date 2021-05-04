@@ -5,22 +5,35 @@ import { Repository } from 'typeorm';
 import { CreateFileDto } from './dto/create-file.dto';
 import { UpdateFileDto } from './dto/update-file.dto';
 import { File } from './entities/file.entity';
+import { IoService } from './io/io.service';
 
 @Injectable()
 export class FilesService {
 
   constructor(
     @InjectRepository(File)
-    private readonly fileRepository: Repository<File>
+    private readonly fileRepository: Repository<File>,
+    private readonly ioService: IoService
   ) {}
-  create(createFileDto: CreateFileDto, user: User) {
-    if(user.client) {
-      createFileDto.client = user.client;
-    } else if (user.organizer) {
-      createFileDto.organizer = user.organizer;
+
+  //TODO - Pendente criar melhor forma de organizar os arquivos por nome.
+  async create(createFileDtos: Array<CreateFileDto>, user: User) {
+    for (const createFileDto of createFileDtos) {
+      if(user.client) {
+        createFileDto.client = user.client;
+      } else if (user.organizer) {
+        createFileDto.organizer = user.organizer;
+      }
+      createFileDto.fileName = createFileDto.file.originalname;
+      createFileDto.filePath = '/';
     }
-    createFileDto.filePath = '/';
-    return this.fileRepository.save(createFileDto);
+    const result = await this.fileRepository.save(createFileDtos);
+    for (const savedFile of result) {
+      savedFile.filePath = this.ioService.saveFile(savedFile);
+      savedFile.file = null;
+    }
+
+    return this.fileRepository.save(result);
   }
 
   findAll(user: User) {

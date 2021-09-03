@@ -40,8 +40,11 @@ export class FilesService {
     return this.fileRepository.find({...user.findParameters});
   }
 
-  findOne(id: string, user: User) {
-    return this.fileRepository.findOne({id, ...user.findParameters});
+  //TODO - Provavelmente, quando alguém quiser recuperar um único arquivo, está desejando apenas os bytes. Revisar este processo
+  async findOne(id: string, user: User) {
+    const fileEntity = await this.fileRepository.findOne({id, ...user.findParameters});
+    const fileContent = this.ioService.getFile(fileEntity);
+    return {fileEntity, fileContent}
   }
 
   update(id: string, updateFileDto: UpdateFileDto, user: User) {

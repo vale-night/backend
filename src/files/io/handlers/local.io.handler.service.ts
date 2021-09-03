@@ -18,7 +18,7 @@ export class LocalIOHandlerService implements IOHandler {
         return true;
     }
     getFile(key: string): Buffer {
-        const result = fs.readFileSync(key);
+        const result = fs.readFileSync(`${this.baseFilePath}/${key}`);
         return result;
     };
 

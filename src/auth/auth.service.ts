@@ -21,7 +21,6 @@ export class AuthService {
 
     async login(loginDto: {username: string, password: string}) {
       const user = await this.userService.findByLogin(loginDto);
-
       const token = this._createToken(user);
 
       return {
@@ -30,7 +29,7 @@ export class AuthService {
       }
     }
 
-    private _createToken({ email }: User): any {
+    private _createToken({ email }: User): {expiresIn: string | number, accessToken: string} {
       const user: {username} = { username: email };    
       const accessToken = this.jwtService.sign(user);    
       return {

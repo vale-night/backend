@@ -17,10 +17,26 @@ export class OrganizersService {
   
   async create(createOrganizerDto: CreateOrganizerDto) {
     const userParams = createOrganizerDto.user;
+    if(createOrganizerDto.id) {
+      createOrganizerDto.createdAt = null;
+      createOrganizerDto.updatedAt = null;
+      await this.organizerRepository.update({id: createOrganizerDto.id}, {
+        name: createOrganizerDto.name,
+        cpf: createOrganizerDto.cpf,
+        fantasyName: createOrganizerDto.fantasyName,
+        cnpj: createOrganizerDto.cnpj,
+        socialReason: createOrganizerDto.socialReason,
+        rg: createOrganizerDto.rg,
+        birthDate: createOrganizerDto.birthDate,
+      });
+      return this.organizerRepository.findOne(createOrganizerDto.id);
+    }
     createOrganizerDto.user = null;
     const savedOrganizer = await this.organizerRepository.save(createOrganizerDto);
     const user = await this.userService.createForOrganizer(userParams, savedOrganizer);
     this.organizerRepository.update({id: savedOrganizer.id}, {user});
+    savedOrganizer.user = user;
+    savedOrganizer.user.organizer = null;
     return savedOrganizer;
   }
 

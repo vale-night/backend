@@ -8,8 +8,9 @@ export class OrganizersController {
   constructor(private readonly organizersService: OrganizersService) {}
 
   @Post()
-  create(@Body() createOrganizerDto: CreateOrganizerDto) {
-    return this.organizersService.create(createOrganizerDto);
+  async create(@Body() createOrganizerDto: CreateOrganizerDto) {
+    const result = await this.organizersService.create(createOrganizerDto);
+    return result;
   }
 
   @Get()

@@ -15,8 +15,8 @@ import { FilesModule } from './files/files.module';
     ConfigModule.forRoot(),
     TypeOrmModule.forRoot({
       type: 'mysql',
-      host: process.env.DATABASE_HOST,
-      port: 3306,
+      host: process.env.DATABASE_HOST || 'localhost',
+      port: Number(process.env.DATABASE_PORT) || 3306,
       username: 'root',
       password: process.env.DATABASE_PASSWORD,
       database: process.env.DATABASE_NAME,
